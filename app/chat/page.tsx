@@ -1,30 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { useTransitionContext } from "@/components/transitionprovider";
 function ChatWindow() {
     const router = useRouter();
-    const params = useSearchParams();
-    const[changeState, setChangeState] = useState(false);
+    const pathname = usePathname();
+    const{windowed,setWindowed,Router} = useTransitionContext();
     useEffect(()=>{
-        if(params.has('sttgs') && params.size !=0 ){
-            setChangeState(true);
-            router.prefetch('/settings');
-            setTimeout(() => {
-                router.push('/settings');
-            }, 950);
-            return;
-        }
-        setChangeState(false);
-    },[params])
+      if(pathname == "/chat" && windowed){
+          setWindowed(false);
+      }  
+    },[pathname])
     return (
-    <section className={`${changeState ? "lg:max-w-320 lg:max-h-176 rounded-[49px]" : "max-w-screen max-h-screen rounded-none"} w-full h-full bg-workspace-background center-dom  flex items-center justify-center px-15 py-10 relative`}>
-      <h2 className={` ${changeState ? "fadeout" :""} slidein font-sans font-semibold absolute text-4xl top-10 left-15`}>
+    <section>
+      <h2 style={{animationDelay:"500ms"}} className={` ${windowed ? "fadeout" :""} slidein font-sans font-semibold absolute text-4xl top-10 left-15`}>
         Zira
       </h2>
-        <button onClick={()=>router.push('?sttgs')} >Go to settings</button>
       <div
-        className={`${changeState ? "fadeout" : " "} slidein user-dom absolute bottom-9 left-10 group flex flex-row items-center justify-start gap-2 bg-gray-100 px-1.5 py-1.5 rounded-full transition-all slidein duration-300 ease-in-out hover:w-max overflow-hidden `}
-        style={{ animationDelay: "900ms" }}
+        className={`${windowed ? "fadeout" : " "} slidein user-dom absolute bottom-9 left-10 group flex flex-row items-center justify-start gap-2 bg-gray-100 px-1.5 py-1.5 rounded-full transition-all slidein duration-300 ease-in-out hover:w-max overflow-hidden `}
+        style={{ animationDelay: "100ms" }}
       >
         <img
           src="https://untitledui.com/images/avatars/owen-harding"

@@ -1,36 +1,34 @@
-"use client"
-import { ChevronLeftIcon } from 'lucide-react'
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-import React, {useState,useEffect, use} from 'react'
+"use client";
+import { useTransitionContext } from "@/components/transitionprovider";
+import { ChevronLeftIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect, use } from "react";
 
 function settings() {
-    const params = useSearchParams();
-    const router = useRouter();
-    const[windowed,setWindowed] = useState(true);
-    useEffect(()=>{
-        if(params.has('cw') && !params.size != 0){
-            setWindowed(false);
-            setTimeout(() => {
-                router.back();
-            }, 950);
-            return
-        }
-    },[params])
+  const pathname = usePathname();
+  const router = useRouter();
+  const { windowed, setWindowed, Router } = useTransitionContext();
+  useEffect(() => {
+    if (pathname == "/settings" && !windowed) {
+      setWindowed(true);
+    }
+  }, [pathname]);
   return (
     <section
-    className={` center-dom
-    flex items-start flex-col bg-workspace-background py-10 px-10 w-full h-full
-    relative transition-all duration-700
-    ${!windowed ? "max-w-screen rounded-none max-h-screen" : "lg:max-w-320 lg:max-h-176 rounded-[49px]"}
+      className={`
+    
     `}
     >
-        <div onClick={()=>router.back()} className='w-full select-none cursor-pointer group slidein flex flex-row items-center justify-start' >
-            <ChevronLeftIcon className='group-hover:-translate-x-1 transition-all' ></ChevronLeftIcon>
-            <span className='text-2xl' >Settings</span>
-        </div>
+      <div
+        onClick={() => Router('/chat',"sttng")}
+        className="w-full select-none cursor-pointer group slidein flex flex-row items-center justify-start"
+      >
+        <ChevronLeftIcon className="group-hover:-translate-x-1 transition-all"></ChevronLeftIcon>
+        <span className="text-2xl">Settings</span>
+      </div>
     </section>
-  )
+  );
 }
 
-export default settings
+export default settings;

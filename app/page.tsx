@@ -1,36 +1,24 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { ArrowUpRightIcon } from "lucide-react";
-import { useRouter , useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useTransitionContext } from "@/components/transitionprovider";
 
 function Home() {
   const [numRows, setNumRows] = useState(1);
   const textRef = useRef<HTMLTextAreaElement | null>(null);
   const inputRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-  const params = useSearchParams();
+  const pathname = usePathname();
   const[isChatWindow, setChatWindow] = useState(false);
-
+  const{Router, windowed , setWindowed} = useTransitionContext()
   useEffect(()=>{
-    if(params.has("cw")){
-      setChatWindow(true);
-      setTimeout(() => {
-        router.push("/chat?id=");
-      }, 950);
+    if(pathname == "/" && !windowed){
+      setWindowed(true);
     }
-    else{
-      setChatWindow(false);
-    }
-  },[params])
-
+  },[pathname])
   return (
     <section
-      className={` center-dom
-    flex items-center flex-col justify-center bg-workspace-background    w-full h-full
-    relative transition-all duration-700
-    slidein
-    ${isChatWindow ? "max-w-screen rounded-none max-h-screen" : "lg:max-w-320 lg:max-h-176 rounded-[49px]"}
-    `}
     >
       <div className={`${isChatWindow ? "fadeout" : ""} flex flex-col items-center justify-start gap-4 relative`}>
         <h2 className="font-sans font-semibold text-4xl slidein" style={{animationDelay:"200ms"}}>Zira</h2>
@@ -77,7 +65,6 @@ function Home() {
           Admin
         </span>
       </div>
-      <button onClick={()=>{router.push('?cw')}} >Click Me</button>
     </section>
   );
 }
